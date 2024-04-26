@@ -1,0 +1,15 @@
+import pandas as pd
+import numpy as np
+
+df=pd.read_csv("/content/sample_data/IRIS (1).csv")
+df
+
+df.mean()
+
+df.mean(axis=1)[0:4]
+df.median()
+df.mode()
+df.min()
+df.max()
+df.std()
+df.std(axis=1)[0:4]

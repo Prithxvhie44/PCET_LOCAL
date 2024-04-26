@@ -1,0 +1,34 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings('ignore')
+df = pd.read_csv('/content/Assignment7 - Sheet1.csv')
+print(df.head())
+df['math score'].describe()
+percentile25 = df['math score'].quantile(0.25)
+percentile75 = df['math score'].quantile(0.75)
+print(percentile75)
+print(percentile25)
+iqr = percentile75 - percentile25
+print(f"IQR :- {iqr}")
+upper_limit = percentile75 + 1.5 * iqr
+lower_limit = percentile25 - 1.5 * iqr
+print("Upper limit",upper_limit)
+print("Lower limit",lower_limit)
+df[df['math score'] > upper_limit]
+df[df['math score'] < lower_limit]
+new_df = df[df['math score'] < upper_limit]
+new_df.shape
+new_df_cap = df.copy()
+new_df_cap['math score'] = np.where(
+new_df_cap['math score'] > upper_limit,
+upper_limit,
+np.where(
+new_df_cap['math score'] < lower_limit,
+lower_limit,
+new_df_cap['math score']
+)
+)
+new_df_cap.shape

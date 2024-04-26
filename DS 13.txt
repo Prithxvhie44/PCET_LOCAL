@@ -1,0 +1,50 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+
+# Load the dataset
+df = pd.read_csv('diabetes.csv')
+
+# Check the column names of the DataFrame
+print(df.columns)
+
+# Replace 'Outcome' with the correct column name
+# Update this line based on the actual column name in your dataset
+target_column = 'Outcome'
+
+# Split the dataset into features (X) and target variable (y)
+X = df.drop(target_column, axis=1)
+y = df[target_column]
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+
+# Initialize Gaussian Naive Bayes classifier
+clf = GaussianNB()
+
+# Train the classifier
+clf.fit(X_train, y_train)
+
+# Predict the target variable on the test set
+y_pred = clf.predict(X_test)
+
+# Calculate the accuracy
+accuracy = np.mean(y_pred == y_test)
+
+# Calculate precision, recall, and F1-score
+precision = np.mean(y_pred[y_pred == 1] == y_test[y_pred == 1])
+recall = np.mean(y_pred[y_test == 1] == y_test[y_test == 1])
+f1_score = 2 * (precision * recall) / (precision + recall)
+
+print('Accuracy: {:.2f}'.format(accuracy))
+print('Precision: {:.2f}'.format(precision))
+print('Recall: {:.2f}'.format(recall))
+print('F1 score: {:.2f}'.format(f1_score))
+
+# Calculate train and test accuracy
+train_accuracy = clf.score(X_train, y_train)
+test_accuracy = clf.score(X_test, y_test)
+
+print('Train accuracy: {:.2f}'.format(train_accuracy))
+print('Test accuracy: {:.2f}'.format(test_accuracy))

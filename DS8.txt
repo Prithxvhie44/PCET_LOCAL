@@ -1,0 +1,26 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.datasets import load_iris
+
+# Load Iris dataset
+iris = load_iris()
+iris_df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+
+# a) Histogram for each feature
+for feature in iris_df.columns:
+    plt.figure(figsize=(6, 4))
+    sns.histplot(iris_df[feature], kde=True)
+    plt.title(f'Histogram of {feature}')
+    plt.xlabel(feature)
+    plt.ylabel('Frequency')
+    plt.show()
+
+# b) Boxplot for each feature
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=iris_df)
+plt.title('Boxplot for Iris Dataset Features')
+plt.xlabel('Features')
+plt.ylabel('Measurement')
+plt.xticks(rotation=45)
+plt.show()

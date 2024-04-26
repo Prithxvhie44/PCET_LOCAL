@@ -1,0 +1,27 @@
+# Define a tuple
+tuple = (1, 2, 3, 4, 5)
+
+# Reverse the tuple
+reversed_tuple = tuple[::-1]
+print("Reversed tuple:", reversed_tuple)
+
+# Unpack the tuple into multiple variables
+a, b, c, d, e = tuple
+print("Unpacked variables:", a, b, c, d, e)
+
+# Access a specific value from the tuple
+index = int(input("enter value you want to access"))
+value = tuple[index]
+print(f"Value at index {index}: {value}")
+
+
+
+
+# Define two dictionaries
+dict1 = {'Name': 'Prithviraj', 'Year': 'FY'}
+dict2 = {'College': 'PCCOE', 'Branch': 'CSE-AIML'}
+
+# Merge the dictionaries
+merged_dict =  dict1 | dict2
+
+print("Merged dictionary:", merged_dict)

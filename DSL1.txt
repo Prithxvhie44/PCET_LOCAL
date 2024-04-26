@@ -1,0 +1,57 @@
+import random
+from collections import Counter
+
+# Function to generate a list of random numbers and count their frequency
+def generate_and_count():
+    size = random.randint(1, 20)  # Random size between 1 and 20
+    random_numbers = [random.randint(1, 100) for _ in range(size)]  # Generate random numbers
+    return Counter(random_numbers)
+
+# Main function
+def main():
+    # Generate random numbers and count their frequency
+    frequency = generate_and_count()
+
+    # Display the frequency of each value
+    print("Value\tFrequency")
+    for value, freq in sorted(frequency.items()):
+        print(f"{value}\t{freq}")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+
+
+
+start_range=int(input("enter start range"))
+end_range=int(input("enter end range"))
+
+print("Odd numbers:")
+for num in range(start_range, end_range + 1):
+    if num % 2 != 0:
+        print(num, end=" ")
+
+print("\nEven numbers:")
+for num in range(start_range, end_range + 1):
+    if num % 2 == 0:
+        print(num, end=" ")
+
+print("\nPrime numbers from the first 20 odd numbers:")
+found_primes = 0
+current_num = 1
+while found_primes < 20:
+    if current_num > 1:
+        is_prime = True
+        for i in range(2, int(current_num**0.5) + 1):
+            if current_num % i == 0:
+                is_prime = False
+                break
+        if is_prime:
+            print(current_num, end=" ")
+            found_primes += 1
+    current_num += 2
