@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Employee {
+public:
+int id;
+string name;
+Employee(int i = -1, string n = "") : id(i), name(n) {}
+};
+class HashTable {
+private:
+Employee* table;
+int size;
+int hashFunction(int key) {
+return key % size;
+}
+public:
+HashTable(int s) : size(s) {
+table = new Employee[size];
+for (int i = 0; i < size; i++) {
+table[i] = Employee();
+}
+}
+~HashTable() {
+delete[] table;
+}
+void insert(int id, string name) {
+int hashIndex = hashFunction(id);
+int i = 0;
+// Linear probing
+while (table[hashIndex].id != -1) {
+hashIndex = (hashIndex + 1) % size;
+if (++i == size) {
+cout << "Hash table is full" << endl;
+return;
+}
+}
+table[hashIndex] = Employee(id, name);
+cout << "Inserted " << name << " at index " << hashIndex << endl;
+}
+Employee* search(int id) {
+int hashIndex = hashFunction(id);
+int i = 0;
+// Linear probing
+while (table[hashIndex].id != -1) {
+if (table[hashIndex].id == id) {
+return &table[hashIndex];
+}
+hashIndex = (hashIndex + 1) % size;
+if (++i == size)
+break;
+}
+return nullptr;
+}
+void display() {
+for (int i = 0; i < size; i++) {
+if (table[i].id != -1) {
+cout << "Index " << i << ": " << table[i].id << " - " << table[i].name << endl;
+} else {
+cout << "Index " << i << ": Empty" << endl;
+}
+}
+}
+};
+int main() {
+HashTable ht(10);
+ht.insert(101, "sujata");
+ht.insert(102, "adinna");
+ht.insert(103, "shrawani");
+ht.display();
+int searchID = 102;
+Employee* emp = ht.search(searchID);
+if (emp != nullptr) {
+cout << "Found employee with ID " << searchID << ": " << emp->name << endl;
+} else {
+cout << "Employee with ID " << searchID << " not found." << endl;
+}
+return 0;

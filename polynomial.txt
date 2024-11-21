@@ -1,0 +1,261 @@
+#include <iostream>
+
+#include <cmath>
+
+using namespace std;
+
+
+
+typedef struct poly{
+
+	int exp;
+
+	int coef;
+
+}poly;
+
+
+
+class poly_op{
+
+private:
+
+	int terms;
+
+	int x;
+
+	poly p[10];
+
+public:
+
+	void poly_accept(){
+
+		cout<<"Enter the Number of terms"<<endl;
+
+		cin>>terms;
+
+		for(int i=0;i<terms;i++){
+
+			cout<<"Enter the coefficient and exponent"<<endl;
+
+			cin>>p[i].coef;
+
+			cin>>p[i].exp;
+
+			}
+
+	}
+
+
+
+	void disp_poly(){
+
+		for (int i = 0; i < terms; i++) {
+
+		            if (i > 0 && p[i].coef > 0) {
+
+		                cout << "+";
+
+		            }
+
+		            cout << p[i].coef << "x^" << p[i].exp;
+
+		        }
+
+		        cout << endl;
+
+		    }
+
+
+
+
+
+	 int evaluate(){
+
+		 int sum=0;
+
+		 cout<<"Enter the value of x"<<endl;
+
+		 cin>>x;
+
+		 for(int i=0;i<terms;i++){
+
+			 int power=pow(x,p[i].exp);
+
+			 sum+=p[i].coef*power;
+
+
+
+		 }
+
+		 return sum;
+
+	 }
+
+
+
+	 void add_poly(poly_op p1,poly_op p2){
+
+		 int i=0;
+
+		 int j=0;
+
+		 int k=0;
+
+		 while(i<p1.terms&& j<p2.terms){
+
+			 if(p1.p[i].exp==p2.p[j].exp){
+
+				 p[k].coef=p1.p[i].coef+p2.p[j].coef;
+
+				 p[k].exp=p1.p[i].exp;
+
+				 i++,j++,k++;
+
+			 }
+
+			 else if(p1.p[i].exp>p2.p[j].exp){
+
+				 p[k].coef=p1.p[i].coef;
+
+				 p[k].exp=p1.p[i].exp;
+
+				 i++,k++;
+
+	         }
+
+			 else{
+
+				 p[k].coef=p2.p[j].coef;
+
+				 p[k].exp=p2.p[j].exp;
+
+				 j++,k++;
+
+			 }
+
+		 }
+
+
+
+		 while(i<p1.terms){
+
+			 p[k].coef=p1.p[i].coef;
+
+			 p[k].exp=p1.p[i].exp;
+
+			 i++,k++;
+
+		 }
+
+		 while(j<p2.terms){
+
+			 p[k].coef=p2.p[j].coef;
+
+			 p[k].exp=p2.p[j].exp;
+
+			 j++,k++;
+
+		 }
+
+		 terms=k;
+
+
+
+	 }
+
+
+
+	 void multiply(poly_op p1, poly_op p2) {
+
+	         int t1 = p1.terms;
+
+	         int t2 = p2.terms;
+
+	         int k = 0;  // Initialize k to track the number of terms in the resultant polynomial
+
+
+
+	         for (int i = 0; i < t1; i++) {  // Fix the loop to increment i
+
+	             for (int j = 0; j < t2; j++) {  // Fix the loop to increment j
+
+	                 int c = p1.p[i].coef * p2.p[j].coef;
+
+	                 int e = p1.p[i].exp + p2.p[j].exp;
+
+
+
+	                 int temp = 0;
+
+	                 int flag = 0;
+
+
+
+	                 // Check if a term with the same exponent already exists
+
+	                 for (temp = 0; temp < k; temp++) {
+
+	                     if (p[temp].exp == e) {
+
+	                         p[temp].coef += c;  // Combine like terms
+
+	                         flag = 1;
+
+	                         break;
+
+	                     }
+
+	                 }
+
+
+
+	                 // If no such term exists, add a new term
+
+	                 if (flag == 0) {
+
+	                     p[k].coef = c;
+
+	                     p[k].exp = e;
+
+	                     k++;
+
+	                 }
+
+	             }
+
+	         }
+
+	         terms = k;  // Set the number of terms in the resultant polynomial
+
+	     }
+
+};
+
+
+
+int main() {
+
+	poly_op p1,p2,p3;
+
+	p1.poly_accept();
+
+	p2.poly_accept();
+
+	p1.disp_poly();
+
+	p2.disp_poly();
+
+	p3.add_poly(p1,p2);
+
+	p3.disp_poly();
+
+	p3.multiply(p1, p2);
+
+	cout << "Resultant Polynomial: ";
+
+	p3.disp_poly();
+
+	return 0;
+
+}

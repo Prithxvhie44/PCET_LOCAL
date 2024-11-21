@@ -1,0 +1,148 @@
+#include <iostream>
+#include <cstring> // For strcpy
+using namespace std;
+// Product class to represent a product with name, price, and popularity
+class Product {
+public:
+ char name[50]; // Array to store the name of the product
+ float price;
+ int popularity;
+ // Constructor to initialize product details with provided values
+ Product(const char* n, float p, int pop) {
+ strcpy(name, n); // Use strcpy to copy the name
+ price = p;
+ popularity = pop;
+ }
+ // Default constructor to create an uninitialized product
+ Product() {
+ strcpy(name, ""); // Set a default name
+ price = 0.0;
+ popularity = 0;
+ }
+ // Display function to print product details
+ void display() const {
+ cout << name << " (Price: " << price << ", Popularity: " << popularity << 
+")" << endl;
+ }
+};
+// Quick Sort for sorting by price
+int partition(Product products[], int low, int high) {
+ float pivot = products[high].price;
+ int i = low - 1;
+ for (int j = low; j <= high - 1; j++) {
+ if (products[j].price <= pivot) {
+ i++;
+ swap(products[i], products[j]);
+ }
+ }
+ swap(products[i + 1], products[high]);
+ return (i + 1);
+}
+void quickSort(Product products[], int low, int high) {
+ if (low < high) {
+ int pi = partition(products, low, high);
+ quickSort(products, low, pi - 1);
+ quickSort(products, pi + 1, high);
+ }
+}
+// Merge Sort for sorting by price
+void merge(Product products[], int left, int right) {
+ if (left < right) {
+ int mid = left + (right - left) / 2;
+ merge(products, left, mid);
+ merge(products, mid + 1, right);
+ int n1 = mid - left + 1;
+ int n2 = right - mid;
+ Product leftArr[n1], rightArr[n2];
+ for (int i = 0; i < n1; i++) leftArr[i] = products[left + i];
+ for (int i = 0; i < n2; i++) rightArr[i] = products[mid + 1 + i];
+ int i = 0, j = 0, k = left;
+ while (i < n1 && j < n2) {
+ if (leftArr[i].price <= rightArr[j].price) {
+ products[k] = leftArr[i];
+ i++;
+ } else {
+ products[k] = rightArr[j];
+ j++;
+ }
+ k++;
+ }
+ while (i < n1) {
+ products[k] = leftArr[i];
+ i++;
+ k++;
+ }
+ while (j < n2) {
+ products[k] = rightArr[j];
+ j++;
+ k++;
+ }
+ }
+}
+void mergeSort(Product products[], int left, int right) {
+ merge(products, left, right);
+}
+// Insertion Sort for sorting by popularity
+void insertionSortByPopularity(Product products[], int n) {
+ for (int i = 1; i < n; i++) {
+ Product key = products[i];
+ int j = i - 1;
+ while (j >= 0 && products[j].popularity > key.popularity) {
+ products[j + 1] = products[j];
+ j = j - 1;
+ }
+ products[j + 1] = key;
+ }
+}
+// Selection Sort for sorting by popularity
+void selectionSortByPopularity(Product products[], int n) {
+ for (int i = 0; i < n - 1; i++) {
+ int minIdx = i;
+ for (int j = i + 1; j < n; j++) {
+ if (products[j].popularity < products[minIdx].popularity) {
+ minIdx = j;
+ }
+ }
+ swap(products[i], products[minIdx]);
+ }
+}
+int main() {
+ // Initialize products
+ Product products[] = {
+ Product("Product A", 500, 20),
+ Product("Product B", 150, 60),
+ Product("Product C", 300, 30),
+ Product("Product D", 200, 90),
+ Product("Product E", 700, 50)
+ };
+ int n = sizeof(products) / sizeof(products[0]);
+ // Quick Sort by Price
+ Product quickSortProducts[n];
+ for (int i = 0; i < n; i++) quickSortProducts[i] = products[i];
+ quickSort(quickSortProducts, 0, n - 1);
+ cout << "Sorted by Price (Quick Sort):\n";
+ for (int i = 0; i < n; i++) quickSortProducts[i].display();
+ cout << endl;
+ // Merge Sort by Price
+ Product mergeSortProducts[n];
+ for (int i = 0; i < n; i++) mergeSortProducts[i] = products[i];
+ mergeSort(mergeSortProducts, 0, n - 1);
+ cout << "Sorted by Price (Merge Sort):\n";
+ for (int i = 0; i < n; i++) mergeSortProducts[i].display();
+ cout << endl;
+ // Insertion Sort by Popularity
+ Product insertionSortProducts[n];
+ for (int i = 0; i < n; i++) insertionSortProducts[i] = products[i];
+ insertionSortByPopularity(insertionSortProducts, n);
+ cout << "Sorted by Popularity (Insertion Sort):\n";
+ for (int i = 0; i < n; i++) insertionSortProducts[i].display();
+ cout << endl;
+ // Selection Sort by Popularity
+ Product selectionSortProducts[n];
+ for (int i = 0; i < n; i++) selectionSortProducts[i] = products[i];
+ selectionSortByPopularity(selectionSortProducts, n);
+ cout << "Sorted by Popularity (Selection Sort):\n";
+ for (int i = 0; i < n; i++) selectionSortProducts[i].display();
+ return 0;
+}
+

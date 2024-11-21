@@ -1,0 +1,114 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+const int max_count = 10;
+using namespace std;
+class GRAPH {
+int M[max_count][max_count] = {0};
+int visited[max_count] = {0};
+int v;
+int e;
+char ch;
+public:
+void create() {
+cout << "Enter the number of vertices: ";
+cin >> v;
+cout << "Enter the number of edges: ";
+cin >> e;
+int v1, v2;
+do {
+cout << "Enter edge (v1 v2): ";
+cin >> v1 >> v2;
+if ((v1 >= 0 && v1 < v) && (v2 >= 0 && v2 < v)) {
+M[v1][v2] = 1;
+M[v2][v1] = 1;
+cout << "Do you want to add another edge (y/n)? ";
+cin >> ch;
+} else {
+cout << "Invalid vertices. Try again.\n";
+ch = 'y';
+}
+} while (ch == 'y');
+}
+void bfs() {
+int n;
+cout << "Enter the starting vertex: ";
+cin >> n;
+for (int i = 0; i < max_count; i++) { // Reset visited for BFS
+visited[i] = 0;
+}
+queue<int> q;
+q.push(n);
+visited[n] = 1;
+cout << "BFS Traversal: ";
+while (!q.empty()) {
+int a = q.front();
+q.pop();
+cout << a << " ";
+for (int i = 0; i < v; i++) {
+if (M[a][i] == 1 && visited[i] == 0) {
+q.push(i);
+visited[i] = 1;
+}
+}
+}
+cout << endl;
+}
+void dfs_nonre(int x) {
+for (int i = 0; i < max_count; i++) { // Reset visited for DFS
+visited[i] = 0;
+}
+stack<int> s;
+int y;
+s.push(x);
+cout << "DFS Traversal: ";
+while (!s.empty()) {
+y = s.top();
+s.pop();
+if (visited[y] == 0) {
+cout << y << " ";
+visited[y] = 1;
+}
+for (int i = 0; i < v; i++) {
+if (M[y][i] == 1 && visited[i] == 0) {
+s.push(i);
+}
+}
+}
+cout << endl;
+}
+};
+int main() {
+GRAPH g;
+int choice;
+int m;
+do {
+cout << "\nMENU\n";
+cout << "1. Create\n";
+cout << "2. BFS Traversal\n";
+cout << "3. DFS Traversal\n";
+cout << "4. Exit\n";
+cout << "Enter your choice: ";
+cin >> choice;
+switch (choice) {
+case 1:
+g.create();
+break;
+case 2:
+g.bfs();
+break;
+case 3:
+cout << "Enter the starting vertex: ";
+cin >> m;
+g.dfs_nonre(m);
+break;
+case 4:
+cout << "Exiting...\n";
+break;
+default:
+cout << "Invalid choice. Please enter a valid option.\n";
+break;
+}
+} while (choice != 4);
+return 0;
+}

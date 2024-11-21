@@ -1,0 +1,205 @@
+#include <iostream>
+#include <string>
+using namespace std;
+struct Node {
+int prn;
+string name;
+Node* next; //A pointer to the next node in the list.
+};
+// Function to add a member at the beginning (for President)
+void addPresident(Node*& head, int prn, string name) //A reference to a
+pointer to the head of the list, allowing the function to modify the original
+list.
+{
+Node* newNode = new Node{prn, name, head}; //Creates a new node
+with the provided PRN and name, and sets its next pointer to the current
+head of the list.
+head = newNode; //: Updates the head of the list to point to this new
+node.
+}
+// Function to add a member at the end (for Secretary)
+void addSecretary(Node*& head, int prn, string name) {
+Node* newNode = new Node{prn, name, nullptr}; Creates a new node
+with the provided PRN and name, and sets its next pointer to nullptr
+since it will be the last node.
+if (!head) // Checks if the list is empty. If true, the new node becomes the
+head.
+{
+head = newNode;
+}
+else {
+Node* temp = head;
+while (temp->next) {
+temp = temp->next;
+} //If the list is not empty, the function traverses to the end of the list
+and adds the new node there.
+temp->next = newNode;
+}
+}
+// Function to add a member in the middle
+void addMember(Node*& head, int prn, string name) {
+if (!head) //If the list is empty, the new member is added as the President.
+{
+cout << "The list is empty. Adding as President." << endl;
+addPresident(head, prn, name);
+} else if (!head->next) // If only one member (President) exists, the new
+member is added as the Secretary.
+{
+cout << "Only President exists. Adding as Secretary." << endl;
+addSecretary(head, prn, name);
+} else // If there are at least two members, the function finds the correct
+position and inserts the new member in the middle of the list.
+{
+Node* newNode = new Node{prn, name, nullptr}; //nullptr: The
+next pointer of the new node is initially set to nullptr because the
+correct position is yet to be found.
+Node* temp = head;
+while (temp->next->next) {
+temp = temp->next;
+}
+newNode->next = temp->next;
+temp->next = newNode;
+}
+}
+// Function to delete a member
+void deleteMember(Node*& head, int prn) {
+if (!head) {
+cout << "The list is empty." << endl;
+return;
+}
+if (head->prn == prn) //Checks if the member to delete is the President
+(head node). If true, the head is updated to the next node, and the old head
+is deleted.
+{
+Node* temp = head;
+head = head->next; //The head is updated to point to the next node in
+the list (head = head->next), effectively removing the President from
+the list.
+delete temp; //The old head (President) is deleted using delete
+temp;, which frees the memory allocated for that node.
+cout << "President removed." << endl;
+return;
+}
+Node* temp = head;
+while (temp->next && temp->next->prn != prn) //Traverses the list to find
+the member to delete. This loop traverses the list, moving temp from one
+node to the next. The loop continues as long as temp->next is not
+nullptr (i.e., there are more nodes to check) and the prn of the next
+node does not match the prn of the member to be deleted.
+{
+temp = temp->next;
+}
+if (!temp->next) //This checks if temp->next is nullptr. If
+temp->next is nullptr, it means the loop reached the end of the list
+without finding a node with the matching prn.
+{
+cout << "Member not found." << endl;
+} else {
+Node* toDelete = temp->next; //A pointer toDelete is set to point to
+the node that needs to be deleted (temp->next).
+temp->next = temp->next->next; //temp->next is updated to skip the
+node to be deleted by pointing to the node after it (temp->next =
+temp->next->next).
+delete toDelete;
+cout << "Member removed." << endl;
+}
+}
+// Function to count the number of members
+int countMembers(Node* head) {
+int count = 0;
+Node* temp = head;
+while (temp) {
+count++;
+temp = temp->next;
+}
+return count;
+}
+// Function to display all members
+void displayMembers(Node* head) {
+if (!head) {
+cout << "No members in the list." << endl;
+return;
+}
+Node* temp = head;
+while (temp) {
+cout << "PRN: " << temp->prn << ", Name: " << temp->name << endl;
+temp = temp->next;
+}
+}
+// Function to concatenate two linked lists
+Node* concatenate(Node* list1, Node* list2) {
+if (!list1) return list2;
+if (!list2) return list1;
+Node* temp = list1;
+while (temp->next) {
+temp = temp->next;
+}
+temp->next = list2;
+return list1;
+}
+int main() {
+Node* club1 = nullptr;
+Node* club2 = nullptr;
+int choice, prn;
+string name;
+do {
+cout << "\n----- ARTIMAS Club Menu -----\n";
+cout << "1. Add President\n";
+cout << "2. Add Secretary\n";
+cout << "3. Add Member\n";
+cout << "4. Delete Member\n";
+cout << "5. Count Members\n";
+cout << "6. Display Members\n";
+cout << "7. Concatenate two divisions\n";
+cout << "8. Exit\n";
+cout << "Enter your choice: ";
+cin >> choice;
+switch (choice) {
+case 1:
+cout << "Enter PRN: ";
+cin >> prn;
+cout << "Enter Name: ";
+cin >> name;
+addPresident(club1, prn, name);
+break;
+case 2:
+cout << "Enter PRN: ";
+cin >> prn;
+cout << "Enter Name: ";
+cin >> name;
+addSecretary(club1, prn, name);
+break;
+case 3:
+cout << "Enter PRN: ";
+cin >> prn;
+cout << "Enter Name: ";
+cin >> name;
+addMember(club1, prn, name);
+break;
+case 4:
+cout << "Enter PRN of the member to delete: ";
+cin >> prn;
+deleteMember(club1, prn);
+break;
+case 5:
+cout << "Total number of members: " << countMembers(club1)
+<< endl;
+break;
+case 6:
+cout << "Club members:\n";
+displayMembers(club1);
+break;
+case 7:
+cout << "Concatenating two divisions...\n";
+club1 = concatenate(club1, club2);
+break;
+case 8:
+cout << "Exiting...\n";
+break;
+default:
+cout << "Invalid choice, please try again." << endl;
+break;
+}
+} while (choice != 8);
+return 0;
+}

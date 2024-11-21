@@ -1,0 +1,171 @@
+#include <iostream>
+#include <string>
+using namespace std;
+struct node {
+string seatNumber; // Seat number (e.g., A1)
+string name; // Name of the person who booked the seat
+node *next; // Pointer to the next node
+node *prev; // Pointer to the previous node
+};
+class cinema {
+private:
+int rows, seatsPerRow;
+node **rowHeads; // Array of head pointers for each row
+// Helper to create a doubly circular linked list for a row
+void createRow(int rowIndex) {
+char rowLabel = 'A' + rowIndex; // Generate row label (e.g., 'A', 'B', ...)
+node *head = nullptr, *last = nullptr;
+for (int i = 1; i <= seatsPerRow; i++) {
+node *newNode = new node;
+newNode->seatNumber = rowLabel + to_string(i); // Seat number (e.g., A1, A2)
+newNode->name = ""; // Initially unbooked
+if (!head) { // First seat in the row
+head = newNode;
+newNode->next = head;
+newNode->prev = head;
+} else {
+newNode->next = head;
+newNode->prev = last;
+last->next = newNode;
+head->prev = newNode;
+}
+last = newNode;
+}
+rowHeads[rowIndex] = head; // Store head pointer in the array
+}
+public:
+// Constructor to initialize cinema
+cinema(int m, int n) {
+rows = m;
+seatsPerRow = n;
+rowHeads = new node *[rows];
+for (int i = 0; i < rows; i++) {
+createRow(i); // Create rows with seats
+}
+// Mark some seats as randomly booked
+randomBooking();
+}
+// Randomly mark some seats as booked
+void randomBooking() {
+rowHeads[0]->name = "Alice"; // A1 booked
+rowHeads[0]->next->next->name = "Bob"; // A3 booked
+rowHeads[1]->next->name = "Charlie"; // B2 booked
+}
+// Display available seats
+void displayAvailableSeats() {
+cout << "\nAvailable Seats:\n";
+for (int i = 0; i < rows; i++) {
+node *current = rowHeads[i];
+bool firstIteration = true;
+do {
+if (current->name == "") { // Seat is available
+cout << current->seatNumber << " ";
+}
+current = current->next;
+firstIteration = false;
+} while (current != rowHeads[i] || firstIteration);
+cout << endl;
+}
+}
+// Book a seat
+void bookSeat() {
+string seat;
+cout << "\nEnter the seat number to book (e.g., A1): ";
+cin >> seat;
+for (int i = 0; i < rows; i++) {
+node *current = rowHeads[i];
+do {
+if (current->seatNumber == seat) {
+if (current->name != "") {
+cout << "Seat " << seat << " is already booked by " << current->name << "!" <<
+endl;
+} else {
+cout << "Enter your name: ";
+cin >> current->name;
+cout << "Seat " << seat << " has been successfully booked!" << endl;
+}
+return;
+}
+current = current->next;
+} while (current != rowHeads[i]);
+}
+cout << "Invalid seat number!" << endl;
+}
+// Cancel a booking
+void cancelBooking() {
+string seat;
+cout << "\nEnter the seat number to cancel booking (e.g., A1): ";
+cin >> seat;
+for (int i = 0; i < rows; i++) {
+node *current = rowHeads[i];
+do {
+if (current->seatNumber == seat) {
+if (current->name == "") {
+cout << "Seat " << seat << " is not booked yet!" << endl;
+} else {
+cout << "Booking for seat " << seat << " has been canceled!" << endl;
+current->name = ""; // Mark seat as available
+}
+return;
+}
+current = current->next;
+} while (current != rowHeads[i]);
+}
+cout << "Invalid seat number!" << endl;
+}
+// Display all seat bookings
+void displayBookings() {
+cout << "\nSeat Bookings:\n";
+for (int i = 0; i < rows; i++) {
+node *current = rowHeads[i];
+do {
+cout << "Seat: " << current->seatNumber << " ";
+if (current->name != "") {
+cout << "Booked by: " << current->name;
+} else {
+cout << "(Available)";
+}
+cout << endl;
+current = current->next;
+} while (current != rowHeads[i]);
+}
+}
+};
+int main() {
+int m, n;
+cout << "Enter the number of rows: ";
+cin >> m;
+cout << "Enter the number of seats per row: ";
+cin >> n;
+cinema c(m, n);
+int choice;
+do {
+cout << "\n--- Cinemax Ticket Booking System ---\n";
+cout << "1. Display available seats\n";
+cout << "2. Book a seat\n";
+cout << "3. Cancel a booking\n";
+cout << "4. Display all bookings\n";
+cout << "0. Exit\n";
+cout << "Enter your choice: ";
+cin >> choice;
+switch (choice) {
+case 1:
+c.displayAvailableSeats();
+break;
+case 2:
+c.bookSeat();
+break;
+case 3:
+c.cancelBooking();
+break;
+case 4:
+c.displayBookings();
+break;
+case 0:
+cout << "Exiting the system. Thank you!\n";
+break;
+default:
+cout << "Invalid choice! Please try again.\n";
+}
+} while (choice != 0);
+return 0;

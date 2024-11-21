@@ -1,0 +1,111 @@
+#include <iostream>
+using namespace std;
+class Stack {
+ int top;
+ char stack[10]; 
+ string exp;
+ string postfix;
+public:
+ Stack() {
+ top = -1;
+ postfix = "";
+ }
+ void push(char d) {
+ if (top == 10 - 1) {
+ cout << "Stack is Full!!" << endl;
+ } else {
+ top++;
+ stack[top] = d;
+ }
+ }
+ char pop() {
+ if (top == -1) {
+ cout << "Stack is Empty" << endl;
+ return '\0';
+ } else {
+ char a = stack[top];
+ top--;
+ return a;
+ }
+ }
+ void enter_string() {
+ cout << "Enter a Valid Infix Expression: ";
+ cin >> exp;
+ }
+ void infix_postfix() {
+ postfix = ""; 
+ for (int i = 0; exp[i] != '\0'; i++) {
+ char token = exp[i];
+ 
+ if (token == '(') {
+ push(token);
+ }
+ 
+ else if (token == ')') {
+ while (top != -1 && stack[top] != '(') {
+ postfix += pop();
+ }
+ pop(); 
+ }
+ 
+ else if (isOperator(token)) {
+ while (top != -1 && priority(stack[top]) >= priority(token)) {
+ postfix += pop();
+ }
+ push(token);
+ }
+ 
+ else {
+ postfix += token;
+ }
+ }
+ 
+ while (top != -1) {
+ postfix += pop();
+ }
+ }
+ int priority(char op) {
+ if (op == '+' || op == '-')
+ return 1;
+ if (op == '*' || op == '/')
+ return 2;
+ return 0; 
+ }
+ bool isOperator(char token) {
+ return (token == '+' || token == '-' || token == '*' || token == '/');
+ }
+ void display_postfix() {
+ cout << "Postfix Expression: " << postfix << endl;
+ }
+};
+int main() {
+ Stack s;
+ int choice;
+ do {
+ cout << "\nMenu:\n";
+ cout << "1. Enter a new Infix Expression\n";
+ cout << "2. Convert Infix to Postfix\n";
+ cout << "3. Display Postfix Expression\n";
+ cout << "4. Exit\n";
+ cout << "Enter your choice: ";
+ cin >> choice;
+ switch (choice) {
+ case 1:
+ s.enter_string();
+ break;
+ case 2:
+ s.infix_postfix();
+ cout << "Conversion to Postfix completed!" << endl;
+ break;
+ case 3:
+ s.display_postfix();
+ break;
+ case 4:
+ cout << "Exiting the program." << endl;
+ break;
+ default:
+ cout << "Invalid choice, please try again!" << endl;
+ }
+ } while (choice != 4);
+ return 0;
+}

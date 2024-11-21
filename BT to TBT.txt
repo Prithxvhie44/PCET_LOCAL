@@ -1,0 +1,74 @@
+#include <iostream>
+using namespace std;
+// Node structure
+struct Node {
+int data;
+Node* left;
+Node* right;
+bool isThreaded; // True if the right pointer is a thread
+};
+// Function to create a new node
+Node* newNode(int data) {
+Node* temp = new Node;
+temp->data = data;
+temp->left = temp->right = nullptr;
+temp->isThreaded = false;
+return temp;
+}
+// Utility function to perform the conversion
+Node* createThreaded(Node* root, Node*& prev) {
+if (root == nullptr)
+return nullptr;
+// Convert the left subtree
+createThreaded(root->left, prev);
+// If the previous node exists, make it threaded
+if (prev && prev->right == nullptr) {
+prev->right = root;
+prev->isThreaded = true;
+}
+// Update the previous node
+prev = root;
+// Convert the right subtree
+createThreaded(root->right, prev);
+return root;
+}
+// Function to co
+nvert a binary tree to a threaded binary tree
+Node* convertToThreaded(Node* root) {
+Node* prev = nullptr;
+return createThreaded(root, prev);
+}
+// Inorder traversal of the threaded binary tree
+void inorderTraversal(Node* root) {
+Node* curr = root;
+// Find the leftmost node
+while (curr && curr->left)
+curr = curr->left;
+// Traverse the threaded binary tree
+while (curr) {
+cout << curr->data << " ";
+// If this node is threaded, follow the thread
+if (curr->isThreaded)
+curr = curr->right;
+else { // Otherwise, move to the leftmost node in the right subtree
+curr = curr->right;
+while (curr && curr->left)
+curr = curr->left;
+}
+}
+}
+int main() {
+// Example binary tree
+Node* root = newNode(10);
+root->left = newNode(5);
+root->right = newNode(15);
+root->left->left = newNode(2);
+root->left->right = newNode(8);
+root->right->right = newNode(20);
+// Convert to threaded binary tree
+convertToThreaded(root);
+// Perform inorder traversal
+cout << "Inorder Traversal of Threaded Binary Tree: ";
+inorderTraversal(root);
+return 0;
+}

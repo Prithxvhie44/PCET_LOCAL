@@ -1,0 +1,108 @@
+#include <iostream>
+#include <string>
+using namespace std;
+struct Queue {
+int order_id;
+string Menu;
+int bill;
+};
+class Pizza_parlor {
+private:
+Queue Q[10];
+int f; // Front index
+int r; // Rear index
+public:
+Pizza_parlor() {
+f = r = -1;
+}
+int isQueue_empty() {
+return (f == -1 && r == -1);
+}
+int isQueue_full() {
+return ((r + 1) % 10 == f);
+}
+void accept_order() {
+if (isQueue_full()) {
+cout << "Queue is full, can't accept more orders." << endl;
+return;
+}
+if (isQueue_empty()) {
+f = r = 0;
+} else {
+r = (r + 1) % 10;
+}
+cout << "Enter the order ID: ";
+cin >> Q[r].order_id;
+cout << "Enter the menu item: ";
+cin >> Q[r].Menu;
+cout << "Enter the total bill: ";
+cin >> Q[r].bill;
+cout << "Your order with order ID " << Q[r].order_id
+<< " is placed successfully." << endl;
+}
+void display_order() {
+if (isQueue_empty()) {
+cout << "No orders to display!" << endl;
+return;
+}
+cout << "Current orders in the queue: " << endl;
+int i = f;
+while (true) {
+cout << "Order ID: " << Q[i].order_id
+<< ", Menu: " << Q[i].Menu
+<< ", Bill: " << Q[i].bill << " RS" << endl;
+if (i == r)
+break;
+i = (i + 1) % 10;
+}
+}
+void deliver_order() {
+if (isQueue_empty()) {
+cout << "No orders to deliver!" << endl;
+return;
+}
+cout << "The order with ID " << Q[f].order_id
+<< ", Menu " << Q[f].Menu
+<< ", with bill " << Q[f].bill << " RS is delivered successfully!" << endl;
+if (f == r) { // If only one order was in the queue
+f = r = -1;
+} else {
+f = (f + 1) % 10;
+}
+}
+};
+int main() {
+Pizza_parlor P1;
+int choice;
+while (true) {
+cout << "\nWelcome to pizza parlour \n";
+cout << "\nMenu:\n";
+cout << "Items available on menu are: \n";
+cout<<"classic Pizza(100)\n";
+cout<<"cheese Pizza(120)\n";
+cout<<"veg Pizza(140)\n";
+cout << "1. Place Order\n";
+cout << "2. Display Order\n";
+cout << "3. Deliver Order\n";
+cout << "4. Exit\n";
+cout << "Enter your choice: ";
+cin >> choice;
+switch (choice) {
+case 1:
+P1.accept_order();
+break;
+case 2:
+P1.display_order();
+break;
+case 3:
+P1.deliver_order();
+break;
+case 4:
+cout << "Exiting" << endl;
+exit(0);
+default:
+cout << "Enter the correct choice." << endl;
+}
+}
+return 0;
+}
