@@ -15,7 +15,6 @@ typedef struct poly{
 }poly;
 
 
-
 class poly_op{
 
 private:
@@ -257,5 +256,6 @@ int main() {
 	p3.disp_poly();
 
 	return 0;
+
 
 }
